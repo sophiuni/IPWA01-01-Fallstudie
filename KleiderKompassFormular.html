@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KleiderKompass - Spende</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .error {
+            color: red;
+            display: none;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const validPostalCodes = ['80', '51', '37'];
+            const form = document.getElementById('kleiderk-form');
+
+            form.addEventListener("submit", function(event) {
+                let isValid = true;
+                const name = document.getElementById('name').value;
+                const strasse = document.getElementById('strasse').value;
+                const plz = document.getElementById('plz').value;
+                const plzAbgleich = plz.substring(0, 2);
+                const ort = document.getElementById('ort').value;
+                const checkboxen = document.querySelectorAll('input[name="kleidung"]:checked');
+                const abholWunsch = document.getElementById('abholung').checked;
+                const kleidungError = document.getElementById('kleidung-error');
+                const abholDatenError = document.getElementById('abholD-error');
+                const plzError = document.getElementById('plz-error');
+
+                document.getElementById('datum').value = new Date().toISOString().split('T')[0];
+                document.getElementById('uhrzeit').value = new Date().toTimeString().split(' ')[0]
+
+                if (checkboxen.length === 0) {
+                    kleidungError.innerHTML = "Bitte mindestens eine Option auswählen.";
+                    kleidungError.style.display = 'block';
+                    isValid = false;
+                }  else {
+                    kleidungError.style.display = 'none';
+                }
+
+                if (abholWunsch) {
+                    if (!name || !strasse || !ort || !plz) {
+                        abholDatenError.innerText = "Es fehlen noch Angaben in den Adressfeldern für die Abholung. Bitte überprüfen Sie das.";
+                        abholDatenError.style.display = 'block';
+                        isValid = false;
+                    }
+
+                    if (!/^\d{5}$/.test(plz)) {
+                        plzError.innerText = "Die Postleitzahl muss aus fünf Ziffern bestehen.";
+                        plzError.style.display = 'block';
+                        isValid = false;
+                    } else if (!validPostalCodes.includes(plzAbgleich)) {
+                        plzError.innerHTML = "Leider befindet sich keine Geschäftsstelle in der Nähe. <a href='KleiderKompassHome.html' target='_blank' class='underline'>Hier Geschäftsstelle finden</a>.";
+                        plzError.style.display = 'block';
+                        isValid = false;
+                    } else {
+                        plzError.style.display = 'none';
+                    }
+                }
+
+                if (!isValid) event.preventDefault();
+            });
+
+            document.getElementById('menu-toggle').addEventListener('click', () => {
+                document.getElementById('mobile-menu').classList.toggle('hidden');
+            });
+        });
+
+        function toggleAdressFelder() {
+            const adressFelder = document.getElementById('adress-felder');
+            const abgabeStandort = document.getElementById('abgabe-standorte');
+            const isAbholung = document.getElementById('abholung').checked;
+
+            adressFelder.style.display = isAbholung ? 'block' : 'none';
+            abgabeStandort.style.display = !isAbholung ? 'block' : 'none';
+
+            document.querySelectorAll('.abgabe-ort').forEach(box => {
+                box.required = !isAbholung;})
+        }
+    </script>
+</head>
+<body class="bg-green-500 text-white">
+    <header class="bg-green-700 shadow-md p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="KleiderKompassHome.html"><img src="Logo_Kleiderkompass.png" alt="Logo" class="w-[100px] h-auto"></a>
+            <button id="menu-toggle" class="md:hidden text-white">☰</button>
+            <nav>
+                <ul class="hidden md:flex space-x-6" id="mobile-menu">
+                    <li><a href="KleiderKompassHome.html" class="text-white hover:text-yellow-400 font-bold">Über uns</a></li>
+                    <li><a href="KleiderKompassFormular.html" class="text-white hover:text-yellow-400 font-bold">Spendenformular</a></li>
+                    <li><a href="#" class="text-white hover:text-yellow-400 font-bold">Kontakt</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto my-8 p-6 bg-white shadow-md rounded-lg text-gray-900">
+        <h1 class="text-3xl font-extrabold text-green-600 mt-4">Spendenformular</h1>
+        <form id="kleiderk-form" method="get" action="KleiderKompassZsmf.html">
+
+            <label class="block text-lg">Zielgebiet:</label>
+            <div class="space-x-4 mb-4">
+                <input type="radio" name="zielgebiet" value="Krisengebiet 1" required> Krisengebiet 1
+                <input type="radio" name="zielgebiet" value="Krisengebiet 2" required> Krisengebiet 2
+                <input type="radio" name="zielgebiet" value="Krisengebiet 3" required> Krisengebiet 3
+            </div>
+
+            <label class="block text-lg">Abholung oder Abgabe:</label>
+            <div class="space-x-4 mb-4">
+                <input type="radio" id="abgabe" name="abholung_oder_abgabe" value="Abgabe" onclick="toggleAdressFelder()" required> Abgabe
+                <input type="radio" id="abholung" name="abholung_oder_abgabe" value="Abholung" onclick="toggleAdressFelder()" required> Abholung
+            </div>
+
+            <div id="abgabe-standorte" style="display:none;">
+                <label class="block text-lg">Geschäftsstelle für Abgabe wählen:</label>
+                <div class="space-x-4 mb-4">
+                    <input type="radio" name="standort" value="Herzberg" class="abgabe-ort"> Herzberg am Harz
+                    <input type="radio" name="standort" value="Köln" class="abgabe-ort"> Köln
+                    <input type="radio" name="standort" value="München" class="abgabe-ort"> München
+                </div>
+            </div>
+
+            <div id="adress-felder" style="display:none;">
+                <label class="block text-lg">Name:</label>
+                <input type="text" id="name" name="name" class="w-full p-2 mb-4 border rounded">
+                <label class="block text-lg">Straße:</label>
+                <input type="text" id="strasse" name="strasse" class="w-full p-2 mb-4 border rounded">
+                <label class="block text-lg">PLZ:</label>
+                <input type="text" id="plz" name="plz" class="w-full p-2 mb-4 border rounded">
+                <div id="plz-error" class="error"></div>
+                <label class="block text-lg">Ort:</label>
+                <input type="text" id="ort" name="ort" class="w-full p-2 mb-4 border rounded">
+            </div>
+            <div id="abholD-error" class="error"></div>
+
+            <label class="block text-lg">Art der Kleidung:</label>
+            <div class="space-x-4 mb-4">
+                <input type="checkbox" name="kleidung" value="Hose"> Hose
+                <input type="checkbox" name="kleidung" value="Jacke"> Jacke
+                <input type="checkbox" name="kleidung" value="Kleid"> Kleid
+                <input type="checkbox" name="kleidung" value="Mütze"> Mütze
+                <input type="checkbox" name="kleidung" value="Oberteil"> Oberteil
+                <input type="checkbox" name="kleidung" value="Rock"> Rock
+                <input type="checkbox" name="kleidung" value="Schuhe"> Schuhe
+                <input type="checkbox" name="kleidung" value="Socken"> Socken
+                <div id="kleidung-error" class="error"></div>
+            </div>
+            <input type="hidden" id="datum" name="datum">
+            <input type="hidden" id="uhrzeit" name="uhrzeit">
+            <input type="submit" value="Spende registrieren" class="bg-green-700 text-white px-4 py-2 rounded hover:bg-yellow-400 hover:text-black">
+        </form>
+    </main>
+</body>
+
+<footer class="bg-green-700 text-white p-8 pt-8">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 text-center">
+
+        <div>
+            <h2 class="text-lg font-bold">Neueste Infos</h2>
+            <p class="mt-2">Der Newsletter informiert Sie in regelmäßigen Abständen über unsere Arbeit.</p>
+            <button class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-yellow-400 hover:text-black">Jetzt abonnieren</button>
+            <div class="mt-4 flex justify-center space-x-4">
+                <a href="https://www.instagram.com"><img src="Instagram_Glyph_White.png" alt="Instagram" class="w-[40px] h-auto"></a>
+                <a href="https://www.facebook.com"><img src="Facebook_Logo_Secondary.png" alt="Facebook" class="w-[40px] h-auto"></a>
+            </div>
+        </div>
+        
+        <div>
+            <h2 class="text-lg font-bold">Links</h2>
+            <ul class="mt-2 space-y-2">
+                <li><a href="#" class="text-white underline hover:text-yellow-400">Cookie-Einstellungen</a></li>
+                <li><a href="#" class="text-white underline hover:text-yellow-400">Datenschutz</a></li>
+                <li><a href="#" class="text-white underline hover:text-yellow-400">Barrierefreiheit</a></li>
+                <li><a href="#" class="text-white underline hover:text-yellow-400">Impressum</a></li>
+                <li><a href="#" class="text-white underline hover:text-yellow-400">Kontakt</a></li>
+            </ul>
+        </div>
+
+        <div>
+            <h2 class="text-lg font-bold">Zertifizierungen des KleiderKompass</h2>
+            <div class="mt-4 space-y-2">
+                <a href="#"><img src="Zertifizierung.png" alt="Zertifizierung" class="mx-auto w-[200px] h-auto"></a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+</html>

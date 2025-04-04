@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KleiderKompass - Zusammenfassung</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-green-500 text-white">
+    <header class="bg-green-700 shadow-md p-4">
+       <div class="container mx-auto flex justify-between items-center">
+        <a href="KleiderKompassHome.html"><img src="Logo_Kleiderkompass.png" alt="Logo" class="w-[100px] h-auto"></a>
+            <nav>
+                <ul class="hidden md:flex space-x-6">
+                    <li><a href="KleiderKompassHome.html" class="text-white hover:text-yellow-400 font-bold">Über uns</a></li>
+                    <li><a href="KleiderKompassFormular.html" class="text-white hover:text-yellow-400 font-bold">Spendenformular</a></li>
+                    <li><a href="#" class="text-white hover:text-yellow-400 font-bold">Kontakt</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <main class="container mx-auto my-8 p-6 bg-white shadow-md rounded-lg text-gray-900">
+        <h1 class="text-3xl font-extrabold text-green-600 mt-4">Registrierung erfolgreich</h1>
+        <p><strong>Krisengebiet:</strong> <span id="zielgebietEingabe"></span></p>
+        <p><strong>Abolung / Abgabe:</strong> <span id="abholung_oder_abgabeEingabe"></span></p>
+        <p><strong>Abgabeort:</strong> <span id="standortEingabe"></span></p>
+        <p><strong>Name (Abholung):</strong> <span id="nameEingabe"></span></p>
+        <p><strong>Straße (Abholung):</strong> <span id="strasseEingabe"></span></p>
+        <p><strong>Postleitzahl (Abholung):</strong> <span id="plzEingabe"></span></p>
+        <p><strong>Ort (Abholung):</strong> <span id="ortEingabe"></span></p>
+        <p><strong>Arten von Kleidungsstücken:</strong> <span id="kleidungEingabe"></span></p>
+        <p><strong>Datum Formulareingang:</strong> <span id="datumEingabe"></span></p>
+        <p><strong>Uhrzeit Formulareingang:</strong> <span id="uhrzeitEingabe"></span></p>
+
+             <script>
+                const params = new URLSearchParams(window.location.search);
+                document.getElementById("zielgebietEingabe").textContent = params.get("zielgebiet");
+                document.getElementById("abholung_oder_abgabeEingabe").textContent = params.get("abholung_oder_abgabe");
+                document.getElementById("standortEingabe").textContent = params.get("standort") || "-";
+                document.getElementById("nameEingabe").textContent = params.get("name") || "-";
+                document.getElementById("strasseEingabe").textContent = params.get("strasse") || "-";
+                document.getElementById("plzEingabe").textContent = params.get("plz") || "-";
+                document.getElementById("ortEingabe").textContent = params.get("ort") || "-";
+                document.getElementById("kleidungEingabe").textContent = params.getAll("kleidung").join(", ");
+                document.getElementById("datumEingabe").textContent = params.get("datum");
+                document.getElementById("uhrzeitEingabe").textContent = params.get("uhrzeit");
+
+            </script>
+    </main>
+</body>
+
+<footer class="bg-green-700 text-white p-8 pt-8">
+    <div class="max-w-7xl mx-auto grid grid-cols-3  text-center">
+        <div>
+            <h2 class="text-lg font-bold">Neueste Infos</h2>
+            <p class="mt-2">Der Newsletter informiert Sie in regelmäßigen Abständen über unsere Arbeit.</p>
+            <button class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-yellow-400 hover:text-black">Jetzt abonnieren</button>
+            <div class="mt-4 flex justify-center space-x-4">
+                <a href="https://www.instagram.com"><img src="Instagram_Glyph_White.png" alt="Instagram" class="w-[40px] h-auto"></a>
+                <a href="https://www.facebook.com"><img src="Facebook_Logo_Secondary.png" alt="Facebook" class="w-[40px] h-auto"></a>
+            </div>
+        </div>
+        
+        <div>
+            <h2 class="text-lg font-bold">Links</h2>
+            <ul class="mt-2 space-y-2">
+                <li><a href="#" class="text-white underline hover:text-yellow-400">Cookie-Einstellungen</a></li>
+                <li><a href="#" class="text-white underline hover:text-yellow-400">Datenschutz</a></li>
+                <li><a href="#" class="text-white underline hover:text-yellow-400">Barrierefreiheit</a></li>
+                <li><a href="#" class="text-white underline hover:text-yellow-400">Impressum</a></li>
+                <li><a href="#" class="text-white underline hover:text-yellow-400">Kontakt</a></li>
+            </ul>
+        </div>
+
+        <div>
+            <h2 class="text-lg font-bold">Zertifizierungen des KleiderKompass</h2>
+            <div class="mt-4 space-y-2">
+                <a href="#"><img src="Zertifizierung.png" alt="Zertifizierung" class="mx-auto w-[200px] h-auto"></a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+</html>
